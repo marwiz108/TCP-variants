@@ -1,6 +1,6 @@
 #!/bin/bash
 
-tcp_variants = ("TCP" "TCP/Reno" "TCP/Newreno" "TCP/Vegas")
+tcp_variants=("TCP" "TCP/Reno" "TCP/Newreno" "TCP/Vegas")
 
 # Run simulation for Experiment 1 for 4 TCP variants: Tahoe, Reno, NewReno and Vegas
 for variant in "${tcp_variants[@]}"
