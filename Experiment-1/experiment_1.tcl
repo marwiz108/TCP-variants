@@ -5,9 +5,7 @@ set ns [new Simulator]
 set tcp_variant [lindex $argv 0]
 
 # 2. The CBR flow
-set cbr_flow [lindex $argv 1]
-# Format the flow rate value
-append $cbr_flow Mb
+set cbr_flow [lindex $argv 1]Mb
 
 
 # Setup the output file name
@@ -94,8 +92,7 @@ $ns attach-agent $N1 $tcp
 
 # Setup FTP application at N4 for data stream
 set ftp_stream [new Application/FTP]
-$ns attach-agent $tcp $ftp_stream
-# $ftp attach-agent $tcp
+$ftp_stream attach-agent $tcp
 
 # Setup TCP Sink at N4
 set tcp_sink [new Agent/TCPSink]
