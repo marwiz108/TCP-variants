@@ -13,8 +13,8 @@ append $cbr_flow Mb
 # Setup the output file name
 set trace_file_name exp1_
 # TCP, TCP/...
-if {[lindex[split $tcp_variant /] 1] != ""} {
-    append trace_file_name [lindex[split $tcp_variant /] 1]
+if {[lindex [split $tcp_variant /] 1] != ""} {
+    append trace_file_name [lindex [split $tcp_variant /] 1]
 } else {
     append trace_file_name Tahoe
 }
