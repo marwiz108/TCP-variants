@@ -102,10 +102,10 @@ $ns attach-agent $N4 $tcp_sink
 # Make connections
 # UDP - From N2 to N3
 $ns connect $udp $cbr_sink
-$udp set fid_1
+$udp set fid_ 1
 # TCP - From N1 to N4
 $ns connect $tcp $tcp_sink
-$tcp set fid_2
+$tcp set fid_ 2
 
 
 # Event schedule for TCP and UDP connections
