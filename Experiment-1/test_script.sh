@@ -1,6 +1,7 @@
 #!/bin/bash
 
 tcp_variants=("TCP" "TCP/Reno" "TCP/Newreno" "TCP/Vegas")
+PREFIX=/course/cs4700f12/ns-allinone-2.35/bin/ns
 
 # Run simulation for Experiment 1 for 4 TCP variants: Tahoe, Reno, NewReno and Vegas
 for variant in "${tcp_variants[@]}"
@@ -11,7 +12,7 @@ do
     for rate in {1..10}
     do
         echo "Simulating $variant for CBR flow rate: $rate"
-        ns experiment_1.tcl $variant $rate
+        $PREFIX experiment_1.tcl $variant $rate
 
     done
 
