@@ -2,10 +2,10 @@ set ns [new Simulator]
 
 # Retrieve simulation parameters from shell command line
 # 1. The TCP Variant
-set tcp_variant = [lindex $argv 0]
+set tcp_variant [lindex $argv 0]
 
 # 2. The CBR flow
-set cbr_flow = [lindex $argv 1]
+set cbr_flow [lindex $argv 1]
 # Format the flow rate value
 append $cbr_flow Mb
 
