@@ -1,10 +1,10 @@
 #!/bin/bash
 
-tcp_variants=("TCP" "TCP/Reno" "TCP/Newreno" "TCP/Vegas")
+TCP_VARIANTS=("TCP" "TCP/Reno" "TCP/Newreno" "TCP/Vegas")
 PREFIX=/course/cs4700f12/ns-allinone-2.35/bin/ns
 
-# Run simulation for Experiment 1 for 4 TCP variants: Tahoe, Reno, NewReno and Vegas
-for variant in "${tcp_variants[@]}"
+# Run simulation for Experiment 1 for 4 TCP variants: Tahoe, Reno, Newreno and Vegas
+for variant in "${TCP_VARIANTS[@]}"
 do
     echo "Running Simulation for $variant"
 
