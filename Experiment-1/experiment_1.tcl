@@ -42,11 +42,11 @@ proc finish {} {
 #
 #        N1(TCP, FTP)    N4(TCP Sink)
 #         \              /
-#  10Mb,8ms\  10Mb,8ms  / 10Mb,8ms
+# 10Mb,12ms\  10Mb,12ms / 10Mb,12ms
 #           N2(CBR) --- N3(UDP Sink)
-#  10Mb,8ms/             \ 10Mb,8ms
-#         /               \
-#        N5                N6 
+# 10Mb,12ms/            \ 10Mb,12ms
+#         /              \
+#        N5               N6 
 #
 
 # Setting up 6 nodes as part of the network blueprint
@@ -63,11 +63,14 @@ set N6 [$ns node]
 
 
 # Create network links. Default queueing mechanism (Droptail)
-$ns duplex-link $N1 $N2 10Mb 8ms DropTail 
-$ns duplex-link $N5 $N2 10Mb 8ms DropTail 
-$ns duplex-link $N2 $N3 10Mb 8ms DropTail 
-$ns duplex-link $N4 $N3 10Mb 8ms DropTail 
-$ns duplex-link $N6 $N3 10Mb 8ms DropTail
+$ns duplex-link $N1 $N2 10Mb 12ms DropTail 
+$ns duplex-link $N5 $N2 10Mb 12ms DropTail 
+$ns duplex-link $N2 $N3 10Mb 12ms DropTail 
+$ns duplex-link $N4 $N3 10Mb 12ms DropTail 
+$ns duplex-link $N6 $N3 10Mb 12ms DropTail 
+
+# Set queue limit between nodes N2 and N3
+$ns queue-limit $N2 $N3 10
 
 
 # UDP-CBR Connection
@@ -78,6 +81,8 @@ $ns attach-agent $N2 $udp
 # Setup CBR over UDP at N2
 set cbr_stream [new Application/Traffic/CBR]
 $cbr_stream set rate_ $cbr_flow
+$cbr_stream set type_ CBR
+$cbr_stream set random_ false
 $cbr_stream attach-agent $udp
 
 # Setup Sink at N3
