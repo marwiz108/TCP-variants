@@ -42,9 +42,9 @@ proc finish {} {
 #
 #        N1(TCP, FTP)    N4(TCP Sink)
 #         \              /
-# 10Mb,15ms\  10Mb,15ms / 10Mb,15ms
+#  10Mb,8ms\  10Mb,8ms  / 10Mb,8ms
 #           N2(CBR) --- N3(UDP Sink)
-# 10Mb,15ms/             \ 10Mb,15ms
+#  10Mb,8ms/             \ 10Mb,8ms
 #         /               \
 #        N5                N6 
 #
@@ -63,11 +63,11 @@ set N6 [$ns node]
 
 
 # Create network links. Default queueing mechanism (Droptail)
-$ns duplex-link $N1 $N2 10Mb 15ms DropTail 
-$ns duplex-link $N5 $N2 10Mb 15ms DropTail 
-$ns duplex-link $N2 $N3 10Mb 15ms DropTail 
-$ns duplex-link $N4 $N3 10Mb 15ms DropTail 
-$ns duplex-link $N6 $N3 10Mb 15ms DropTail
+$ns duplex-link $N1 $N2 10Mb 8ms DropTail 
+$ns duplex-link $N5 $N2 10Mb 8ms DropTail 
+$ns duplex-link $N2 $N3 10Mb 8ms DropTail 
+$ns duplex-link $N4 $N3 10Mb 8ms DropTail 
+$ns duplex-link $N6 $N3 10Mb 8ms DropTail
 
 
 # UDP-CBR Connection
