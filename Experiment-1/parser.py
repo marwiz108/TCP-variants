@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 #import os
-from curses import meta
 import sys
 import csv
+from typing import final
 
 # constant
 
@@ -206,9 +206,37 @@ def main():
     elif OPTION == "exp3":
         # for exp3 we only care about latency and throughput verse time
         rtts = {}
-        tp_sec = {}
-        
+        tp_sec = {} # key = sec value = throughput at the time
+        # overall end to end latency
+        EtoELatency(trace,'0', '2')
 
+        for i in range(len(trace)):
+            # event == recv
+            if trace[i][0] == 'r':
+                # flow id
+                if trace[i][7] == '2':
+                    # ack recv at source node
+                    if trace[i][4] == 'ack' and trace[i][3] == '0':
+                        tp_sec[trace[i][1]] += trace[i][5]
+                    # tcp rece at sink node
+                    elif trace[i][4] == 'tcp' and trace[i][3] == '3':
+                        tp_sec[trace[i][1]] += trace[i][5]
+                
+            # calculating... per 1 second?
+            final_dic = {}
+            for sec in tp_sec:
+                # count the time (time interval)
+                count = 1
+                if sec <= count:
+                    thoughput_at_sec = tp_sec[sec] * 8 / (1024*1024) / 1.0
+                    final_dic[count] += thoughput_at_sec
+                else:
+                    count += 1
+
+            with open(RES_FILE, 'a+', newline='') as file:
+                for sec in final_dic:
+                    writer = csv.writer(file)
+                    writer.writerow([sec, final_dic[sec]])
     else:
         print("wrong option for parser")
 
