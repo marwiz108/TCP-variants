@@ -74,7 +74,7 @@ $ns attach-agent $N3 $cbr_sink
 
 # TCP-FTP Connection
 # Setup TCP connection at N1
-set tcp [new Agent/$tcp_variant]
+set tcp [new Agent/TCP/$tcp_variant]
 $ns attach-agent $N1 $tcp
 # Setup FTP application at N4 for data stream
 set ftp_stream [new Application/FTP]
