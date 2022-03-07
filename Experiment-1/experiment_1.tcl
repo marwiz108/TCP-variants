@@ -70,7 +70,7 @@ $ns duplex-link $N4 $N3 10Mb 12ms DropTail
 $ns duplex-link $N6 $N3 10Mb 12ms DropTail 
 
 # Set queue limit between nodes N2 and N3
-$ns queue-limit $N2 $N3 10
+$ns queue-limit $N2 $N3 50
 
 
 # UDP-CBR Connection
@@ -94,6 +94,7 @@ $ns attach-agent $N3 $cbr_sink
 # Setup TCP connection from N1 to N4
 set tcp [new Agent/$tcp_variant]
 $ns attach-agent $N1 $tcp
+$tcp set window_ 100
 
 # Setup FTP application at N4 for data stream
 set ftp_stream [new Application/FTP]
