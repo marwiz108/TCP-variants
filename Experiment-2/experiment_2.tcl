@@ -8,10 +8,9 @@ set tcp_variant2 [lindex $argv 1]
 # 2. The CBR flow
 set cbr_flow [lindex $argv 2]Mb
 
-# 3. The TCP Start time
+# 3. The TCP variant pair start times
 set tcp1_start_time [lindex $argv 3]
-let rem_time="4.0 - $tcp1_start_time" | bc
-set tcp2_start_time $rem_time
+set tcp2_start_time [lindex $argv 4]
 
 
 # Setup the output file name

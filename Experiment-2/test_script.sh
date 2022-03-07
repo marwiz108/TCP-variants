@@ -9,11 +9,10 @@ do
     # Run simulation for each pair of TCP variants with CBR flow starting from 1Mbps till the bottleneck capacity
     for rate in {1..10}
     do
-        for start_time in $(seq 1.0 1.0 3.0)
-        do
-            $PREFIX experiment_2.tcl $variant_pair $rate $start_time
-            
-        done
+        $PREFIX experiment_2.tcl $variant_pair $rate 1.0 4.0
+        $PREFIX experiment_2.tcl $variant_pair $rate 3.0 3.0
+        $PREFIX experiment_2.tcl $variant_pair $rate 4.0 1.0
+
     done
 done
 
