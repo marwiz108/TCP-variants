@@ -9,7 +9,8 @@ set tcp_variant2 [lindex $argv 1]
 set cbr_flow [lindex $argv 2]Mb
 
 # 3. The TCP Start time
-set tcp_start_time [lindex $argv 3]
+set tcp1_start_time [lindex $argv 3]
+set tcp2_start_time 4.0 - $tcp1_start_time
 
 
 # Setup the output file name
@@ -136,10 +137,10 @@ $tcp_var2 set fid_ 3
 
 # Event schedule for TCP and UDP connections
 # Starting CBR at 2.0s
-$ns at 2.0 "$cbr_stream start"
+$ns at 0.0 "$cbr_stream start"
 # Starting TCP variant pairs before and when CBR starts (stabalization check)
-$ns at $tcp_start_time "$ftp_stream_var1 start"
-$ns at $tcp_start_time "$ftp_stream_var2 start"
+$ns at $tcp1_start_time "$ftp_stream_var1 start"
+$ns at $tcp2_start_time "$ftp_stream_var2 start"
 
 $ns at 10.0 "$cbr_stream stop"
 $ns at 10.0 "$ftp_stream_var1 stop"
