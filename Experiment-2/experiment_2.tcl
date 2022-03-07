@@ -10,7 +10,7 @@ set cbr_flow [lindex $argv 2]Mb
 
 # 3. The TCP Start time
 set tcp1_start_time [lindex $argv 3]
-set tcp2_start_time "4.0 - $tcp1_start_time" | bc
+set tcp2_start_time [lindex $argv 4]
 
 
 # Setup the output file name

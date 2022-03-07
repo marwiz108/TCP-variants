@@ -12,7 +12,7 @@ do
     do
         for start_time in $(seq 1.0 1.0 3.0)
         do
-            $PREFIX experiment_2.tcl $variant_pair $rate $start_time
+            $PREFIX experiment_2.tcl $variant_pair $rate $start_time "4.0 - $start_time" | bc
 
         done
 
