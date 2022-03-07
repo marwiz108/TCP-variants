@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 #import os
+from curses import meta
 import sys
 import csv
 
@@ -145,6 +146,17 @@ def EtoELatency(trace,srcNode,fid):
 
     return latency
 
+def get_meta_trace(TRACE_FILE):
+    meta_data = TRACE_FILE.split('/')[-1].split('_')
+    # exp1_Newreno_10Mb.tr
+    # exp1_Newreno_9Mb.tr
+    tcp_variant = meta_data[1]
+    cbr_flow = meta_data[2]
+    cbr_flow = cbr_flow[: -5]
+
+    return tcp_variant, cbr_flow
+
+
 ###########################################################################################################
 # main function
 # program usage: python3 exp# trace_filename output_filename
@@ -171,7 +183,8 @@ def main():
         # write the data into csv file
         with open(RES_FILE, 'a+', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([TRACE_FILE,thoughput_res,drop_rate,latency])
+            tcp_variant, cbr_flow = get_meta_trace(TRACE_FILE)
+            writer.writerow([tcp_variant, cbr_flow, thoughput_res, drop_rate, latency])
 
     elif OPTION == "exp2":
         # first TCP (source node = 0, sink node = 3, flow id = 2)
