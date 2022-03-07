@@ -1,6 +1,6 @@
 #!/bin/bash
 
-tcps=("Reno" "SACK")
+tcps=("Reno" "Sack1")
 queue_algorithms=("DropTail" "RED")
 PREFIX=/course/cs4700f12/ns-allinone-2.35/bin/ns
 
