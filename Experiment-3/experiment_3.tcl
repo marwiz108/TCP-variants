@@ -6,7 +6,7 @@ set queue [lindex $argv 1]
 
 # Setup output file
 set trace_file_name exp3_
-append trace_file_name $queue _ $tcp_variant.tr
+append trace_file_name $tcp_variant _ $queue.tr
 
 # Console message
 puts "$trace_file_name, TCP Variant: $tcp_variant, Queueing algorithm: $queue"
