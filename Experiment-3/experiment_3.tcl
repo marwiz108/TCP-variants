@@ -48,7 +48,7 @@ $ns duplex-link $N1 $N2 10Mb 12ms $queue
 $ns duplex-link $N5 $N2 10Mb 12ms $queue
 $ns duplex-link $N2 $N3 10Mb 12ms $queue
 $ns duplex-link $N4 $N3 10Mb 12ms $queue
-$nw duplex-link $N6 $N3 10Mb 12ms $queue
+$ns duplex-link $N6 $N3 10Mb 12ms $queue
 
 # Set queue limit
 # TODO - do we need limits for all or just cbr?
