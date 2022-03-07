@@ -11,7 +11,7 @@ do
     # Run simulation for each pair of TCP variants with CBR flow starting from 1Mbps till the bottleneck capacity
     for rate in {1..10}
     do
-        for start_time in {0..2.0..0.5}
+        for start_time in $(seq 0 0.5 2.0)
         do
             echo "Simulating for 2 variants $variant_pair with CBR flow: $rate and TCP Start Time: $start_time"
             $PREFIX experiment_2.tcl $variant_pair $rate $start_time

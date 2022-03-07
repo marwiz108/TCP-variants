@@ -16,7 +16,8 @@ set tcp_start_time [lindex $argv 3]
 set trace_file_name exp2_
 # TCP/... TCP/...
 append trace_file_name [lindex [split $tcp_variant1 /] 1] _ [lindex [split $tcp_variant2 /] 1]
-append trace_file_name _$cbr_flow.tr
+append trace_file_name _$cbr_flow
+append trace_data _$tcp_start_time.tr
 
 # Console log message
 puts "$trace_file_name, TCP Variant 1: $tcp_variant1, TCP Variant 2: $tcp_variant2, CBR Flow: $cbr_flow"
