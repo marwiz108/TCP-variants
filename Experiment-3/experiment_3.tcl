@@ -52,11 +52,11 @@ $ns duplex-link $N6 $N3 10Mb 12ms $queue
 
 # Set queue limit
 # TODO - do we need limits for all or just cbr?
-$ns queue-limit $N1 $N2 10
-$ns queue-limit $N5 $N2 10
-$ns queue-limit $N2 $N3 10
-$ns queue-limit $N4 $N3 10
-$ns queue-limit $N6 $N3 10
+$ns queue-limit $N1 $N2 50
+$ns queue-limit $N5 $N2 50
+$ns queue-limit $N2 $N3 50
+$ns queue-limit $N4 $N3 50
+$ns queue-limit $N6 $N3 50
 
 # UDP-CBR Connection
 # Setup UDP connection at N2
@@ -75,6 +75,7 @@ $ns attach-agent $N3 $cbr_sink
 # TCP-FTP Connection
 # Setup TCP connection at N1
 set tcp [new Agent/TCP/$tcp_variant]
+$tcp set window_ 100
 $ns attach-agent $N1 $tcp
 # Setup FTP application at N4 for data stream
 set ftp_stream [new Application/FTP]
@@ -93,10 +94,10 @@ $tcp set fid_ 2
 
 # Event schedule for TCP and UDP connections
 $ns at 0.0 "$ftp_stream start"
-$ns at 5.0 "$cbr_stream start"
-$ns at 20.0 "$ftp_stream stop"
-$ns at 20.0 "$cbr_stream stop"
+$ns at 3.0 "$cbr_stream start"
+$ns at 10.0 "$ftp_stream stop"
+$ns at 10.0 "$cbr_stream stop"
 
 # Run simulation
-$ns at 20.0 "finish"
+$ns at 10.1 "finish"
 $ns run
