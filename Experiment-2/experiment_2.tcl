@@ -18,10 +18,11 @@ set trace_file_name exp2_
 # TCP/... TCP/...
 append trace_file_name [lindex [split $tcp_variant1 /] 1] _ [lindex [split $tcp_variant2 /] 1]
 append trace_file_name _$cbr_flow
-append trace_file_name _$tcp_start_time.tr
+append trace_file_name _$tcp1_start_time
+append trace_file_name _$tcp2_start_time.tr
 
 # Console log message
-puts "$trace_file_name || Running Simulation for TCP Variant 1: $tcp_variant1 | TCP Variant 2: $tcp_variant2 | CBR Flow: $cbr_flow | TCP Start Time: $tcp_start_time"
+puts "$trace_file_name || Running Sim for TCP 1: $tcp_variant1 | TCP 2: $tcp_variant2 | CBR: $cbr_flow | TCP 1 ST: $tcp1_start_time | TCP 2 ST: $tcp2_start_time"
 
 
 # Open simulation trace file
