@@ -8,6 +8,9 @@ set tcp_variant2 [lindex $argv 1]
 # 2. The CBR flow
 set cbr_flow [lindex $argv 2]Mb
 
+# 3. The TCP Start time
+set tcp_start_time [lindex $argv 3]
+
 
 # Setup the output file name
 set trace_file_name exp2_
@@ -68,7 +71,7 @@ $ns duplex-link $N4 $N3 10Mb 12ms DropTail
 $ns duplex-link $N6 $N3 10Mb 12ms DropTail 
 
 # Set queue limit between nodes N2 and N3
-$ns queue-limit $N2 $N3 10 
+$ns queue-limit $N2 $N3 50 
 
 
 # UDP-CBR Connection
@@ -92,6 +95,7 @@ $ns attach-agent $N3 $cbr_sink
 # Setup the first TCP connection from N1 to N4
 set tcp_var1 [new Agent/$tcp_variant1]
 $ns attach-agent $N1 $tcp_var1
+$tcp_var1 set window_ 100
 
 # Setup FTP application at N4 for data stream
 set ftp_stream_var1 [new Application/FTP]
@@ -106,6 +110,7 @@ $ns attach-agent $N4 $tcp_sink_var1
 # Setup the second TCP connection from N5 to N6
 set tcp_var2 [new Agent/$tcp_variant2]
 $ns attach-agent $N5 $tcp_var2
+$tcp_var2 set window_ 100
 
 # Setup FTP application at N5 for data stream
 set ftp_stream_var2 [new Application/FTP]
@@ -129,16 +134,18 @@ $tcp_var2 set fid_ 3
 
 
 # Event schedule for TCP and UDP connections
-$ns at 0.0 "$cbr_stream start"
-$ns at 0.0 "$ftp_stream_var1 start"
-$ns at 0.0 "$ftp_stream_var2 start"
+# Starting CBR at 2.0s
+$ns at 2.0 "$cbr_stream start"
+# Starting TCP variant pairs before and when CBR starts (stabalization check)
+$ns at $tcp_start_time "$ftp_stream_var1 start"
+$ns at $tcp_start_time "$ftp_stream_var2 start"
 
+$ns at 10.0 "$cbr_stream stop"
 $ns at 10.0 "$ftp_stream_var1 stop"
 $ns at 10.0 "$ftp_stream_var2 stop"
-$ns at 10.0 "$cbr_stream stop"
 
 # Run simulation
-$ns at 10.0 "finish"
+$ns at 10.1 "finish"
 $ns run
 
 
