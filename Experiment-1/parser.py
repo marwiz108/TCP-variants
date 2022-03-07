@@ -1,79 +1,90 @@
 #!/usr/bin/env python3
 
-import os, sys, csv
+#import os
+import sys
+import csv
+from typing import final
 
+# constant
 
-""" Helper function to read input trace file as a 2D list format as follows:
-[[ 0: event, 1: time, 2: from_node, 3: to_node, 4: packet_type, 5: packet_size, 6: flags, 7: flow_id, 8: src_addr, 9: dest_addr, 10: seq_num, 11: packet_id], ....]
-"""
-def read_file(filename):
-    # Open the file with reading mode
-    trace_file = open(filename, "r")
+################################################################################################################
+# function to read the input trace file as a 2D list format as follow
+# [[ 0 event 1 time 2 fromnode 3 tonode 4 pkttype 5 pktsize 6 flags 7 fid 8 srcaddr 9 desaddr 10 seq# 11 pktid]]
+################################################################################################################
+def readfile(filename):
+    # open the file with reading mode
+    f = open(filename, "r")
     trace_list = []
 
-    # Store each line in trace file
-    for line in trace_file:
-        # split the lines with space delimiter, and each line is a list (trace data in above format)
+    # store each line in trace file
+    for line in f:
+        #print(line)
+        # split the line with space, and each line is a list
         line_list = line.split()
         # append to line list
         trace_list.append(line_list)
     
-    # Close file
-    trace_file.close()
-
-    # Return list of trace records (2-dimensional)
+    #print(trace_list)
+    # close the file
+    f.close()
+    # return 2D list
     return trace_list
 
-""" Helper function to calculate the thoughput
-1. Calculate the size of receive event toNode at sinkNode with the asked flow id (one flow in exp1 and two in exp2)
-2. Convert from bytes to bits (multiply the size by 8)
-3. Divide the size in bits by the network path latency
-4. Convert the result to megabits (divided the result from step 3 with 1024 * 1024)
-"""
-def thoughput(trace_records, src_node, sink_node, flow_id):
+################################################################################################################
+# function to calculate the thoughput
+# 1. Sum the size of receive event toNode at sinkNode with the asked flow id (one flow in exp1 and two in exp2)
+# 2. Convert from bytes to bits (multiply the size by 8)
+# 3. Divide the size in bits by the network path latency
+# 4. Convert the result to megabits (divided the result from step 3 with 1024*1024 )
+#################################################################################################################
+def thoughput(trace, srcNode, sinkNode, fid):
+
     size_pkt_recv = 0
-    pkt_count = 0 
-    
-    # record the start time of first packet
+    pkt_count = 0 # used to record the start time
+
     start_time = 0
     end_time = 0
 
-    # loop through the trace records
-    for i in range(len(trace_records)):
-        # PACKETS RECEIVED (ACKs) back to TCP Source node (N1)
-        # size up the total size with ack message to source node with asked flow id
-        # every ack message is 40 bytes
-        if (trace_records[i][0] == 'r' and trace_records[i][4] == 'ack' and trace_records[i][3] == src_node and trace_records[i][7] == flow_id):
-            size_pkt_recv = size_pkt_recv + float(trace_records[i][5])
-            
-            # if this is the first packet received, record the time as start time
+    # loop through the trace list
+    for i in range(len(trace)):
+        # if there is any rece event at sinkNode with asked flow id add the packet size up
+        if trace[i][0] == 'r' and trace[i][3] == sinkNode and trace[i][7] == fid:
+            size_pkt_recv = size_pkt_recv + float(trace[i][5])
+            # if this is the first packet rece record the time as start time
             if pkt_count == 0:
-                start_time = trace_records[i][1]
-            
-            # record the end time of the last packet
+                start_time = trace[i][1]
+                pkt_count += 1
+            # update the end time after the first recv
+            ##############################################################
             # (should we record last time with ack instead of 'r' event?)
             else:
-                end_time = trace_records[i][1]
-
-            pkt_count += 1
+                end_time = trace[i][1]
+                pkt_count += 1
+        # also size up the total size with ack message to source node with asked flow id
+        # every ack message is 40 bytes
+        # added an event in case repeated multiple times
+        elif trace[i][0] == 'r' and trace[i][3] == srcNode and trace[i][4] == 'ack' and trace[i][7] == fid:
+            size_pkt_recv = size_pkt_recv + float(trace[i][5])
     
     # calculate the total time usage
     time_usage = float(end_time) - float(start_time)
 
     # convert units from byte to bits and Mb and finally divided by path latency
     size_pkt_recv = size_pkt_recv * 8
-    size_pkt_recv = size_pkt_recv / (1024 * 1024)
+    size_pkt_recv = size_pkt_recv / ( 1024 * 1024 )
     thoughput_res = size_pkt_recv / time_usage
     
     # return the final result
     return thoughput_res
 
-""" Helper function to calculate the drop rate
-1. Counting drop event of the package with tcp protocol 
-2. Counting the sent event of the package from source node
-3. drop rate = num of drop packet / num of packet sent
-"""
-def packet_drop_rate(trace,srcNode):
+#####################################################################################################
+# function to calculate the drop rate
+# 1. counting drop event of the package with tcp protocol 
+# 2. counting the sent event of the package from source node
+# 3. drop rate = num of drop packet/ num of packet sent
+######################################################################################################
+def pktDrop(trace,srcNode,fid):
+    
     pkt_drop = 0
     pkt_sent = 0
 
@@ -81,10 +92,10 @@ def packet_drop_rate(trace,srcNode):
     for i in range(len(trace)):
 
         # counter for packet drop
-        if trace[i][4] == 'tcp' and trace[i][0] == 'd':
+        if trace[i][4] == 'tcp' and trace[i][0] == 'd' and trace[i][7] == fid :
             pkt_drop += 1
         # counter for packet sent from source node
-        if trace[i][4] == 'tcp' and trace[i][0] == '-' and trace[i][2] == srcNode:
+        if trace[i][4] == 'tcp' and trace[i][0] == '-' and trace[i][2] == srcNode and trace[i][7] == fid:
             pkt_sent += 1
     
     # calculating the drop rate
@@ -146,13 +157,13 @@ def main():
 
     #print("parsing file " + str(TRACE_FILE) + "\n" )
     # read file 
-    trace = read_file(TRACE_FILE)
+    trace = readfile(TRACE_FILE)
 
     # if the trace files are result for experiment 1
     if OPTION == "exp1":
         
         # drop_rate (trace_list, source node)
-        drop_rate = packet_drop_rate(trace,'0')
+        drop_rate = pktDrop(trace,'0','2')
         # thoughput(trace_list, source node, sink node, flow id)
         thoughput_res = thoughput(trace, '0', '3', '2')
         # EtoELatency(trace, srcNode, fid)
@@ -164,14 +175,56 @@ def main():
             writer.writerow([TRACE_FILE,thoughput_res,drop_rate,latency])
 
     elif OPTION == "exp2":
-        print("exp2")
+        # first TCP (source node = 0, sink node = 3, flow id = 2)
+        # second TCP (source node = 4, sink node = 5, flow id = 3)
+        drop_rate1 = pktDrop(trace,'0','2')
+        drop_rate2 = pktDrop(trace,'4','3')
+
+        thoughput_res1 = thoughput(trace, '0', '3', '2')
+        thoughput_res2 = thoughput(trace, '4', '5', '3')
+
+        latency1 = EtoELatency(trace,'0', '2')
+        latency2 = EtoELatency(trace,'4', '3')
+
+        # write the data into csv file
+        with open(RES_FILE, 'a+', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([TRACE_FILE,thoughput_res1,thoughput_res2,drop_rate1,drop_rate2,latency1,latency2])
+
     elif OPTION == "exp3":
-        print("exp3")
+        # for exp3 we only care about latency and throughput verse time
+        tp_sec = {} # key = sec value = throughput at the time
+        # overall end to end latency
+        EtoELatency(trace,'0', '2')
+
+        for i in range(len(trace)):
+            # event == recv
+            if trace[i][0] == 'r':
+                # flow id
+                if trace[i][7] == '2':
+                    # ack recv at source node
+                    if trace[i][4] == 'ack' and trace[i][3] == '0':
+                        tp_sec[trace[i][1]] += trace[i][5]
+                    # tcp rece at sink node
+                    elif trace[i][4] == 'tcp' and trace[i][3] == '3':
+                        tp_sec[trace[i][1]] += trace[i][5]
+                
+            # calculating... per 1 second?
+            final_dic = {}
+            for sec in tp_sec:
+                # count the time (time interval)
+                count = 1
+                if sec <= count:
+                    thoughput_at_sec = tp_sec[sec] * 8 / (1024*1024) / 1.0
+                    final_dic[count] += thoughput_at_sec
+                else:
+                    count += 1
+
+            with open(RES_FILE, 'a+', newline='') as file:
+                for sec in final_dic:
+                    writer = csv.writer(file)
+                    writer.writerow([sec, final_dic[sec]])
     else:
         print("wrong option for parser")
-        
-    #print("throughput for " + str(TRACE_FILE) + " is " + str(thoughput_res) + "\n")
-    #print("drop rate for " + str(TRACE_FILE) +  " is " + str(drop_rate) + "\n")
-    #print("average end to end latency for " + str(TRACE_FILE) +  " is " + str(latency) + "\n")
 
 main()
