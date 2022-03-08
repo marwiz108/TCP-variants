@@ -63,7 +63,7 @@ set udp [new Agent/UDP]
 $ns attach-agent $N2 $udp
 # Setup CBR over UDP at N2
 set cbr_stream [new Application/Traffic/CBR]
-$cbr_stream set rate_ 10mb
+$cbr_stream set rate_ 8mb
 $cbr_stream set type_ CBR
 $cbr_stream set random_ false
 $cbr_stream attach-agent $udp
@@ -94,9 +94,9 @@ $tcp set fid_ 2
 # Event schedule for TCP and UDP connections
 $ns at 0.0 "$ftp_stream start"
 $ns at 3.0 "$cbr_stream start"
-$ns at 20.0 "$ftp_stream stop"
-$ns at 20.0 "$cbr_stream stop"
+$ns at 30.0 "$ftp_stream stop"
+$ns at 30.0 "$cbr_stream stop"
 
 # Run simulation
-$ns at 20.1 "finish"
+$ns at 30.1 "finish"
 $ns run
