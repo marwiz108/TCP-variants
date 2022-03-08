@@ -135,9 +135,9 @@ $tcp_var2 set fid_ 3
 
 
 # Event schedule for TCP and UDP connections
-# Starting CBR at 2.0s
-$ns at 0.0 "$cbr_stream start"
-# Starting TCP variant pairs before and when CBR starts (stabalization check)
+# Starting CBR at 0.0s
+# $ns at 0.0 "$cbr_stream start"
+# Starting TCP variant pairs after CBR starts (stabalization check)
 $ns at $tcp1_start_time "$ftp_stream_var1 start"
 $ns at $tcp2_start_time "$ftp_stream_var2 start"
 
