@@ -87,7 +87,6 @@ set cbr_stream [new Application/Traffic/CBR]
 $cbr_stream set rate_ $cbr_flow
 $cbr_stream set type_ CBR
 $cbr_stream set random_ false
-$cbr_stream set packet_size_ 1000
 $cbr_stream attach-agent $udp
 
 # Setup Sink at N3
@@ -98,7 +97,13 @@ $ns attach-agent $N3 $cbr_sink
 # TCP-FTP Connection 1
 # Setup the first TCP connection from N1 to N4
 set tcp_var1 [new Agent/$tcp_variant1]
+$tcp_var1 set window_ 100
 $ns attach-agent $N1 $tcp_var1
+
+# Setup FTP application at N1 for data stream
+set ftp_stream_var1 [new Application/FTP]
+$ftp_stream_var1 set type_ FTP
+$ftp_stream_var1 attach-agent $tcp_var1
 
 # Setup TCP Sink at N4
 set tcp_sink_var1 [new Agent/TCPSink]
@@ -108,7 +113,13 @@ $ns attach-agent $N4 $tcp_sink_var1
 # TCP-FTP Connection 2
 # Setup the second TCP connection from N5 to N6
 set tcp_var2 [new Agent/$tcp_variant2]
+$tcp_var2 set window_ 100
 $ns attach-agent $N5 $tcp_var2
+
+# Setup FTP application at N5 for data stream
+set ftp_stream_var2 [new Application/FTP]
+$ftp_stream_var2 set type_ FTP
+$ftp_stream_var2 attach-agent $tcp_var2
 
 # Setup TCP Sink at N6
 set tcp_sink_var2 [new Agent/TCPSink]
@@ -127,20 +138,9 @@ $ns connect $tcp_var2 $tcp_sink_var2
 $tcp_var2 set fid_ 3
 
 
-# Setup FTP application at N4 for data stream
-set ftp_stream_var1 [new Application/FTP]
-$ftp_stream_var1 set type_ FTP
-$ftp_stream_var1 attach-agent $tcp_var1
-
-# Setup FTP application at N5 for data stream
-set ftp_stream_var2 [new Application/FTP]
-$ftp_stream_var2 set type_ FTP
-$ftp_stream_var2 attach-agent $tcp_var2
-
-
 # Event schedule for TCP and UDP connections
 # Starting CBR at 0.0s
-$ns at 0.0 "$cbr_stream start"
+$ns at 0.1 "$cbr_stream start"
 # Starting TCP variant pairs after CBR starts (stabalization check)
 $ns at $tcp1_start_time "$ftp_stream_var1 start"
 $ns at $tcp2_start_time "$ftp_stream_var2 start"
