@@ -87,7 +87,7 @@ set cbr_stream [new Application/Traffic/CBR]
 $cbr_stream set rate_ $cbr_flow
 $cbr_stream set type_ CBR
 $cbr_stream set random_ false
-$cbr_stream packet_size_ 1000
+$cbr_stream set packet_size_ 1000
 $cbr_stream attach-agent $udp
 
 # Setup Sink at N3
