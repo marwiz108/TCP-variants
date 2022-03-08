@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 #import os
+from __future__ import division
 from curses import meta
 import sys
 import csv
@@ -228,16 +229,17 @@ def main():
 
     elif OPTION == "exp3":
         # for exp3 we only care about latency and throughput verse time
-        #rtts = {}
+        rtts = {}
         tp_sec = {} # key = sec value = throughput at the time
         # overall end to end latency
-        latency = EtoELatency(trace,'0', '2')
+        #EtoELatency(trace,'0', '2')
 
         for i in range(len(trace)):
             # event == recv
-            if trace[i][0] == 'r':
+            #if trace[i][0] == 'r':
+            if trace[i][7] == '2':
                 # flow id
-                if trace[i][7] == '2':
+                if trace[i][0] == 'r':
                     # ack recv at source node
                     if trace[i][4] == 'ack' and trace[i][3] == '0':
                         # tp_sec[time] = tp_sec[time] + size(in bytes)
@@ -245,6 +247,12 @@ def main():
                             tp_sec[trace[i][1]] += trace[i][5]
                         except:
                             tp_sec[trace[i][1]] = trace[i][5]
+                        
+                        try:
+                            rtts[trace[i][10]] = [0, float(trace[i][1])]
+                        except:
+                            rtts[trace[i][10]] = [0, 0]
+                            
 
                     # tcp recv at sink node
                     elif trace[i][4] == 'tcp' and trace[i][3] == '3':
@@ -253,8 +261,16 @@ def main():
                         except:
                             tp_sec[trace[i][1]] = trace[i][5]
                 
+                elif trace[i][0] == '+':
+                    if trace[i][2] == '0' and trace[i][4] == 'tcp' :
+                        try:
+                            rtts[trace[i][10]] = [float(trace[i][1]), 0]
+                        except:
+                            rtts[trace[i][10]] = [0, 0]
+                
         # calculating... per 1 second?
         final_dic = {}
+        latency_res = {}
         count = 1
 
         for sec in tp_sec:
@@ -268,15 +284,41 @@ def main():
                     final_dic[count] = thoughput_at_sec
             elif float(sec) > count:
                 count += 1
+        cnt = 1
+        num_pkt = 0
+        for rtt in rtts:
+            time_stamp = rtts[rtt][1]
+            if time_stamp <= cnt:
+                delay = (float(rtts[rtt][1]) - float(rtts[rtt][0]))
+                num_pkt += 1
+                #print(delay, num_pkt)
+                try:
+                    latency_res[cnt][0] += delay
+                    latency_res[cnt][1] = num_pkt
+                except:
+                    latency_res[cnt] = [delay,num_pkt]
+            else:
+                cnt += 1
+                
 
         #for time in final_dic:
         #    print(str(time) + " = " + str(final_dic[time]) )
-
+        #for time in latency_res:
+            #print(str(time) + " = " + str(latency_res[time]) )
+        
         with open(RES_FILE, 'a+', newline='') as file:
             for sec in final_dic:
                 writer = csv.writer(file)
                 tcp_variant, queue_algo = get_meta_trace(TRACE_FILE, 'exp3')
                 writer.writerow([tcp_variant, queue_algo, sec, final_dic[sec], latency])
+            for sec in latency_res:
+                writer = csv.writer(file)
+                try:
+                    res = (float(latency_res[sec][0]) / float(latency_res[sec][1]))
+                except:
+                    res = -1
+                writer.writerow([sec, res])
+
     else:
         print("wrong option for parser")
 

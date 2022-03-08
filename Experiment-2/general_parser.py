@@ -13,7 +13,7 @@ def parameter_calculation(trace_records):
     packet_time_1, packet_time_2 = {}, {}
 
     # Track of the time of first and last packets for throughput calculation
-    start_time_tcp_1, start_time_tcp_2, end_time = 0.0, 0.0, 12.0
+    start_time_tcp_1, start_time_tcp_2, end_time = 0.0, 0.0, 0.0
 
     # Fields for calculation of latency
     total_delay_1, total_delay_2 = 0.0, 0.0
@@ -33,7 +33,7 @@ def parameter_calculation(trace_records):
                 delay = float(time) - packet_time_1[seq_num]
                 total_delay_1 += delay
 
-            elif (to_node == '4' and flow_id == '3'):
+            if (to_node == '4' and flow_id == '3'):
                 # Received packet is the first one
                 if (packet_count_2 == 0):
                     start_time_tcp_2 = float(time)
@@ -50,7 +50,7 @@ def parameter_calculation(trace_records):
                 dropped_packets_1 += 1
 
             # Packet dropped for second TCP connection
-            elif (flow_id == '3'):
+            if (flow_id == '3'):
                 dropped_packets_2 += 1
 
         # Calculate number of packets sent for Drop Rate and Latency parameter calculation
@@ -70,8 +70,8 @@ def parameter_calculation(trace_records):
 
     # Parameter Calculation
     # Throughput (in Mbps) - x8 (Bytes to bits)
-    throughput_1 = ((received_packet_size_1 * 8) / (end_time - start_time_tcp_1)) / (1000000)
-    throughput_2 = ((received_packet_size_2 * 8) / (end_time - start_time_tcp_2)) / (1000000)
+    throughput_1 = ((received_packet_size_1 * 8) / (end_time - start_time_tcp_1)) / (1024 * 1024)
+    throughput_2 = ((received_packet_size_2 * 8) / (end_time - start_time_tcp_2)) / (1024 * 1024)
 
     # Drop rate (0 ... 1)
     drop_rate_1 = float(dropped_packets_1) / sent_packets_1

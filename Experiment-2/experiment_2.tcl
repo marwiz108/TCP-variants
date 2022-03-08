@@ -12,7 +12,6 @@ set cbr_flow [lindex $argv 2]mb
 set tcp1_start_time [lindex $argv 3]
 set tcp2_start_time [lindex $argv 4]
 
-
 # Setup the output file name
 set trace_file_name exp2_
 # TCP/... TCP/...
@@ -23,7 +22,6 @@ append trace_file_name _$tcp2_start_time.tr
 
 # Console log message
 puts "$trace_file_name || Running Sim for TCP 1: $tcp_variant1 | TCP 2: $tcp_variant2 | CBR: $cbr_flow | TCP 1 ST: $tcp1_start_time | TCP 2 ST: $tcp2_start_time"
-
 
 # Open simulation trace file
 set nf [open trace_data/$trace_file_name w]
@@ -37,7 +35,6 @@ proc finish {} {
     close $nf
     exit 0
 }
-
 
 #
 # Create a simple six node topology:
@@ -65,7 +62,6 @@ set N4 [$ns node]
 # TCP Sink 2
 set N6 [$ns node]
 
-
 # Create network links. Default queueing mechanism (Droptail)
 $ns duplex-link $N1 $N2 10Mb 10ms DropTail 
 $ns duplex-link $N5 $N2 10Mb 10ms DropTail 
@@ -74,8 +70,11 @@ $ns duplex-link $N3 $N4 10Mb 10ms DropTail
 $ns duplex-link $N3 $N6 10Mb 10ms DropTail 
 
 # Set queue limit between nodes N2 and N3
-$ns queue-limit $N2 $N3 20 
-
+$ns queue-limit $N1 $N2 50 
+$ns queue-limit $N5 $N2 50 
+$ns queue-limit $N2 $N3 50 
+$ns queue-limit $N3 $N4 50 
+$ns queue-limit $N3 $N6 50 
 
 # UDP-CBR Connection
 # Setup a UDP connection for CBR flow at N2
@@ -93,65 +92,59 @@ $cbr_stream attach-agent $udp
 set cbr_sink [new Agent/Null]
 $ns attach-agent $N3 $cbr_sink
 
+# Connection: UDP - From N2 to N3
+$ns connect $udp $cbr_sink
+$udp set fid_ 1
 
 # TCP-FTP Connection 1
 # Setup the first TCP connection from N1 to N4
 set tcp_var1 [new Agent/$tcp_variant1]
+$tcp_var1 set window_ 100
 $ns attach-agent $N1 $tcp_var1
+
+# Setup FTP application at N1 for data stream
+set ftp_stream_var1 [new Application/FTP]
+$ftp_stream_var1 set type_ FTP
+$ftp_stream_var1 attach-agent $tcp_var1
 
 # Setup TCP Sink at N4
 set tcp_sink_var1 [new Agent/TCPSink]
 $ns attach-agent $N4 $tcp_sink_var1
 
+# Connection: TCP 1 - From N1 to N4
+$ns connect $tcp_var1 $tcp_sink_var1
+$tcp_var1 set fid_ 2
 
 # TCP-FTP Connection 2
 # Setup the second TCP connection from N5 to N6
 set tcp_var2 [new Agent/$tcp_variant2]
+$tcp_var2 set window_ 100
 $ns attach-agent $N5 $tcp_var2
-
-# Setup TCP Sink at N6
-set tcp_sink_var2 [new Agent/TCPSink]
-$ns attach-agent $N6 $tcp_sink_var2
-
-
-# Make connections
-# UDP - From N2 to N3
-$ns connect $udp $cbr_sink
-$udp set fid_ 1
-# TCP 1 - From N1 to N4
-$ns connect $tcp_var1 $tcp_sink_var1
-$tcp_var1 set fid_ 2
-# TCP 2 - From N5 to N6
-$ns connect $tcp_var2 $tcp_sink_var2
-$tcp_var2 set fid_ 3
-
-
-# Setup FTP application at N4 for data stream
-set ftp_stream_var1 [new Application/FTP]
-$ftp_stream_var1 set type_ FTP
-$ftp_stream_var1 attach-agent $tcp_var1
 
 # Setup FTP application at N5 for data stream
 set ftp_stream_var2 [new Application/FTP]
 $ftp_stream_var2 set type_ FTP
 $ftp_stream_var2 attach-agent $tcp_var2
 
+# Setup TCP Sink at N6
+set tcp_sink_var2 [new Agent/TCPSink]
+$ns attach-agent $N6 $tcp_sink_var2
+
+# TCP 2 - From N5 to N6
+$ns connect $tcp_var2 $tcp_sink_var2
+$tcp_var2 set fid_ 3
 
 # Event schedule for TCP and UDP connections
 # Starting CBR at 0.0s
-# $ns at 0.0 "$cbr_stream start"
+$ns at 0.1 "$cbr_stream start"
 # Starting TCP variant pairs after CBR starts (stabalization check)
 $ns at $tcp1_start_time "$ftp_stream_var1 start"
 $ns at $tcp2_start_time "$ftp_stream_var2 start"
 
-$ns at 20.0 "$cbr_stream stop"
+$ns at 20.5 "$cbr_stream stop"
 $ns at 20.0 "$ftp_stream_var1 stop"
 $ns at 20.0 "$ftp_stream_var2 stop"
 
 # Run simulation
-$ns at 20.1 "finish"
+$ns at 21.0 "finish"
 $ns run
-
-
-# References
-# https://www.tcl.tk/man/tcl8.4/TclCmd/
