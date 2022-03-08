@@ -51,13 +51,11 @@ def thoughput(trace, srcNode, sinkNode, fid):
             # if this is the first packet rece record the time as start time
             if pkt_count == 0:
                 start_time = trace[i][1]
-                pkt_count += 1
             # update the end time after the first recv
             ##############################################################
             # (should we record last time with ack instead of 'r' event?)
-            else:
-                end_time = trace[i][1]
-                pkt_count += 1
+            end_time = trace[i][1]
+            pkt_count += 1
         # also size up the total size with ack message to source node with asked flow id
         # every ack message is 40 bytes
         # added an event in case repeated multiple times
@@ -123,7 +121,7 @@ def EtoELatency(trace,srcNode,fid):
     # loop through the trace list
     for i in range(len(trace)):
         # record the enqueue time as value[0] and the pkt sequence number as the key with a dic data structure
-        if trace[i][0] == '+' and trace[i][2] == srcNode and trace[i][4] == 'tcp' and trace[i][7] == fid :
+        if trace[i][0] == '-' and trace[i][2] == srcNode and trace[i][4] == 'tcp' and trace[i][7] == fid :
             if trace[i][10] not in rtts:
                 #{key = seq#, value = [enqueue time, recv time]}
                 rtts[trace[i][10]] = [float(trace[i][1]), 0]

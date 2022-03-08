@@ -15,7 +15,7 @@ set tcp2_start_time [lindex $argv 4]
 # Setup the output file name
 set trace_file_name exp2_
 # TCP/... TCP/...
-append trace_file_name [lindex [split $tcp_variant1 /] 1] _ [lindex [split $tcp_variant2 /] 1]
+append trace_file_name $tcp_variant1 _ $tcp_variant2
 append trace_file_name _$cbr_flow
 append trace_file_name _$tcp1_start_time
 append trace_file_name _$tcp2_start_time.tr
@@ -98,7 +98,7 @@ $udp set fid_ 1
 
 # TCP-FTP Connection 1
 # Setup the first TCP connection from N1 to N4
-set tcp_var1 [new Agent/$tcp_variant1]
+set tcp_var1 [new Agent/TCP/$tcp_variant1]
 $tcp_var1 set window_ 100
 $ns attach-agent $N1 $tcp_var1
 
@@ -117,7 +117,7 @@ $tcp_var1 set fid_ 2
 
 # TCP-FTP Connection 2
 # Setup the second TCP connection from N5 to N6
-set tcp_var2 [new Agent/$tcp_variant2]
+set tcp_var2 [new Agent/TCP/$tcp_variant2]
 $tcp_var2 set window_ 100
 $ns attach-agent $N5 $tcp_var2
 
