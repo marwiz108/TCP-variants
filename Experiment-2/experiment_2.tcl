@@ -12,7 +12,6 @@ set cbr_flow [lindex $argv 2]mb
 set tcp1_start_time [lindex $argv 3]
 set tcp2_start_time [lindex $argv 4]
 
-
 # Setup the output file name
 set trace_file_name exp2_
 # TCP/... TCP/...
@@ -23,7 +22,6 @@ append trace_file_name _$tcp2_start_time.tr
 
 # Console log message
 puts "$trace_file_name || Running Sim for TCP 1: $tcp_variant1 | TCP 2: $tcp_variant2 | CBR: $cbr_flow | TCP 1 ST: $tcp1_start_time | TCP 2 ST: $tcp2_start_time"
-
 
 # Open simulation trace file
 set nf [open trace_data/$trace_file_name w]
@@ -37,7 +35,6 @@ proc finish {} {
     close $nf
     exit 0
 }
-
 
 #
 # Create a simple six node topology:
@@ -65,7 +62,6 @@ set N4 [$ns node]
 # TCP Sink 2
 set N6 [$ns node]
 
-
 # Create network links. Default queueing mechanism (Droptail)
 $ns duplex-link $N1 $N2 10Mb 10ms DropTail 
 $ns duplex-link $N5 $N2 10Mb 10ms DropTail 
@@ -79,7 +75,6 @@ $ns queue-limit $N5 $N2 50
 $ns queue-limit $N2 $N3 50 
 $ns queue-limit $N3 $N4 50 
 $ns queue-limit $N3 $N6 50 
-
 
 # UDP-CBR Connection
 # Setup a UDP connection for CBR flow at N2
@@ -101,7 +96,6 @@ $ns attach-agent $N3 $cbr_sink
 $ns connect $udp $cbr_sink
 $udp set fid_ 1
 
-
 # TCP-FTP Connection 1
 # Setup the first TCP connection from N1 to N4
 set tcp_var1 [new Agent/$tcp_variant1]
@@ -120,7 +114,6 @@ $ns attach-agent $N4 $tcp_sink_var1
 # Connection: TCP 1 - From N1 to N4
 $ns connect $tcp_var1 $tcp_sink_var1
 $tcp_var1 set fid_ 2
-
 
 # TCP-FTP Connection 2
 # Setup the second TCP connection from N5 to N6
@@ -141,7 +134,6 @@ $ns attach-agent $N6 $tcp_sink_var2
 $ns connect $tcp_var2 $tcp_sink_var2
 $tcp_var2 set fid_ 3
 
-
 # Event schedule for TCP and UDP connections
 # Starting CBR at 0.0s
 $ns at 0.1 "$cbr_stream start"
@@ -156,7 +148,3 @@ $ns at 20.0 "$ftp_stream_var2 stop"
 # Run simulation
 $ns at 21.0 "finish"
 $ns run
-
-
-# References
-# https://www.tcl.tk/man/tcl8.4/TclCmd/
