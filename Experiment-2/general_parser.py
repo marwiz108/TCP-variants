@@ -23,7 +23,7 @@ def parameter_calculation(trace_records):
 
         # Calculate number of packets received for Throughput parameter calculation
         if (event == 'r'):  #  and packet_type == 'ack'
-            if (to_node == '0' and flow_id == '2'):
+            if (to_node == '0'):    #  and flow_id == '2'
                 # Received packet is the first one
                 if (packet_count_1 == 0):
                     start_time_tcp_1 = float(time)
@@ -33,7 +33,7 @@ def parameter_calculation(trace_records):
                 delay = float(time) - packet_time_1[seq_num]
                 total_delay_1 += delay
 
-            elif (to_node == '4' and flow_id == '3'):
+            elif (to_node == '4'):  #  and flow_id == '3'
                 # Received packet is the first one
                 if (packet_count_2 == 0):
                     start_time_tcp_2 = float(time)
@@ -55,15 +55,15 @@ def parameter_calculation(trace_records):
 
         # Calculate number of packets sent for Drop Rate and Latency parameter calculation
         # Save sending time of each seq_num in a dictionary to measure RTT of ack packet
-        if (event == '+'):  #  and packet_type == 'tcp'
+        if (event == '-'):  #  and packet_type == 'tcp'
             # From Node 1 (fid_ 2)
-            if (from_node == '0' and flow_id == '2'):
+            if (from_node == '0'):  #  and flow_id == '2'
                 sent_packets_1 += 1
                 # Update time of packet seq_num
                 packet_time_1[seq_num] = float(time)
 
             # From Node 5 (fid_ 3)
-            if (from_node == '4' and flow_id == '3'):
+            elif (from_node == '4'):  #  and flow_id == '3'
                 sent_packets_2 += 1
                 # Update time of packet seq_num
                 packet_time_2[seq_num] = float(time)

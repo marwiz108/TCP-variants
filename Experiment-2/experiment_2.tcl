@@ -74,7 +74,7 @@ $ns duplex-link $N3 $N4 10Mb 10ms DropTail
 $ns duplex-link $N3 $N6 10Mb 10ms DropTail 
 
 # Set queue limit between nodes N2 and N3
-$ns queue-limit $N2 $N3 20 
+$ns queue-limit $N2 $N3 50 
 
 
 # UDP-CBR Connection
