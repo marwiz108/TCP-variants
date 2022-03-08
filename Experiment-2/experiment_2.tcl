@@ -74,7 +74,11 @@ $ns duplex-link $N3 $N4 10Mb 10ms DropTail
 $ns duplex-link $N3 $N6 10Mb 10ms DropTail 
 
 # Set queue limit between nodes N2 and N3
+$ns queue-limit $N1 $N2 50 
+$ns queue-limit $N5 $N2 50 
 $ns queue-limit $N2 $N3 50 
+$ns queue-limit $N3 $N4 50 
+$ns queue-limit $N3 $N6 50 
 
 
 # UDP-CBR Connection
@@ -93,6 +97,10 @@ $cbr_stream attach-agent $udp
 set cbr_sink [new Agent/Null]
 $ns attach-agent $N3 $cbr_sink
 
+# Connection: UDP - From N2 to N3
+$ns connect $udp $cbr_sink
+$udp set fid_ 1
+
 
 # TCP-FTP Connection 1
 # Setup the first TCP connection from N1 to N4
@@ -108,6 +116,10 @@ $ftp_stream_var1 attach-agent $tcp_var1
 # Setup TCP Sink at N4
 set tcp_sink_var1 [new Agent/TCPSink]
 $ns attach-agent $N4 $tcp_sink_var1
+
+# Connection: TCP 1 - From N1 to N4
+$ns connect $tcp_var1 $tcp_sink_var1
+$tcp_var1 set fid_ 2
 
 
 # TCP-FTP Connection 2
@@ -125,14 +137,6 @@ $ftp_stream_var2 attach-agent $tcp_var2
 set tcp_sink_var2 [new Agent/TCPSink]
 $ns attach-agent $N6 $tcp_sink_var2
 
-
-# Make connections
-# UDP - From N2 to N3
-$ns connect $udp $cbr_sink
-$udp set fid_ 1
-# TCP 1 - From N1 to N4
-$ns connect $tcp_var1 $tcp_sink_var1
-$tcp_var1 set fid_ 2
 # TCP 2 - From N5 to N6
 $ns connect $tcp_var2 $tcp_sink_var2
 $tcp_var2 set fid_ 3
