@@ -6,7 +6,7 @@ set tcp_variant1 [lindex $argv 0]
 set tcp_variant2 [lindex $argv 1]
 
 # 2. The CBR flow
-set cbr_flow [lindex $argv 2]Mb
+set cbr_flow [lindex $argv 2]mb
 
 # 3. The TCP variant pair start times
 set tcp1_start_time [lindex $argv 3]
@@ -67,11 +67,11 @@ set N6 [$ns node]
 
 
 # Create network links. Default queueing mechanism (Droptail)
-$ns duplex-link $N1 $N2 10Mb 10ms DropTail 
-$ns duplex-link $N5 $N2 10Mb 10ms DropTail 
-$ns duplex-link $N2 $N3 10Mb 10ms DropTail 
-$ns duplex-link $N3 $N4 10Mb 10ms DropTail 
-$ns duplex-link $N3 $N6 10Mb 10ms DropTail 
+$ns duplex-link $N1 $N2 10Mb 10ms SFQ 
+$ns duplex-link $N5 $N2 10Mb 10ms SFQ 
+$ns duplex-link $N2 $N3 10Mb 10ms SFQ 
+$ns duplex-link $N3 $N4 10Mb 10ms SFQ 
+$ns duplex-link $N3 $N6 10Mb 10ms SFQ 
 
 # Set queue limit between nodes N2 and N3
 $ns queue-limit $N2 $N3 20 
@@ -101,6 +101,7 @@ $ns attach-agent $N1 $tcp_var1
 
 # Setup FTP application at N4 for data stream
 set ftp_stream_var1 [new Application/FTP]
+$ftp_stream_var1 set type_ FTP
 $ftp_stream_var1 attach-agent $tcp_var1
 
 # Setup TCP Sink at N4
@@ -115,6 +116,7 @@ $ns attach-agent $N5 $tcp_var2
 
 # Setup FTP application at N5 for data stream
 set ftp_stream_var2 [new Application/FTP]
+$ftp_stream_var2 set type_ FTP
 $ftp_stream_var2 attach-agent $tcp_var2
 
 # Setup TCP Sink at N6
