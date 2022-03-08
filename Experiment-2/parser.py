@@ -3,8 +3,6 @@
 #import os
 import sys
 import csv
-from typing import final
-
 # constant
 
 ################################################################################################################
@@ -96,6 +94,7 @@ def pktDrop(trace,srcNode,fid):
         if trace[i][4] == 'tcp' and trace[i][0] == '-' and trace[i][2] == srcNode and trace[i][7] == fid:
             pkt_sent += 1
     
+    # [[ 0 event 1 time 2 fromnode 3 tonode 4 pkttype 5 pktsize 6 flags 7 fid 8 srcaddr 9 desaddr 10 seq# 11 pktid]]
     # calculating the drop rate
     drop_rate = float(pkt_drop) / float(pkt_sent)
     
@@ -169,7 +168,6 @@ def main():
 
     # if the trace files are result for experiment 1
     if OPTION == "exp1":
-        
         # drop_rate (trace_list, source node, flow id)
         drop_rate = pktDrop(trace,'0','2')
         # thoughput(trace_list, source node, sink node, flow id)
@@ -184,8 +182,8 @@ def main():
             writer.writerow([tcp_variant, cbr_flow, thoughput_res, drop_rate, latency])
 
     elif OPTION == "exp2":
-        # first TCP (source node = 0, sink node = 3, flow id = 2)
-        # second TCP (source node = 4, sink node = 5, flow id = 3)
+        # first TCP (source node = 0, flow id = 2)
+        # second TCP (source node = 4, flow id = 3)
         drop_rate1 = pktDrop(trace,'0','2')
         drop_rate2 = pktDrop(trace,'4','3')
 
