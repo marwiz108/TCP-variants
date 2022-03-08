@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TCP_VARIANT_PAIRS=("TCP/Reno TCP/Reno" "TCP/Newreno TCP/Reno" "TCP/Vegas TCP/Vegas" "TCP/Newreno TCP/Vegas")
+TCP_VARIANT_PAIRS=("Reno Reno" "Newreno Reno" "Vegas Vegas" "Newreno Vegas")
 PREFIX=/course/cs4700f12/ns-allinone-2.35/bin/ns
 
 # Run simulation for Experiment 2 for 4 TCP variant pairs: Reno/Reno, NewReno/Reno, Vegas/Vegas, and Newreno/Vegas
