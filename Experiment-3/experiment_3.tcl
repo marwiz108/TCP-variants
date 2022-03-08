@@ -94,9 +94,9 @@ $tcp set fid_ 2
 # Event schedule for TCP and UDP connections
 $ns at 0.0 "$ftp_stream start"
 $ns at 3.0 "$cbr_stream start"
-$ns at 40.0 "$ftp_stream stop"
-$ns at 40.0 "$cbr_stream stop"
+$ns at 30.0 "$ftp_stream stop"
+$ns at 30.0 "$cbr_stream stop"
 
 # Run simulation
-$ns at 40.1 "finish"
+$ns at 30.1 "finish"
 $ns run
