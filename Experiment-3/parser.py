@@ -174,11 +174,12 @@ def get_meta_trace(TRACE_FILE, option):
         tcp2_st = meta_data[5][: -3]
 
         return tcp_variant1, tcp_variant2, cbr_flow, tcp1_st, tcp2_st
-
-    meta_data = TRACE_FILE.split('/')[-1].split('_')
-    tcp_variant = meta_data[1]
-    queue_algo = meta_data[2][:-3]
-    return tcp_variant, queue_algo
+    elif option == 'exp3':
+        meta_data = TRACE_FILE.split('/')[-1].split('_')
+        tcp_variant = meta_data[1]
+        queue_algo = meta_data[2][:-3]
+        print(tcp_variant, queue_algo)
+        return tcp_variant, queue_algo
 
 
 ###########################################################################################################
@@ -310,14 +311,15 @@ def main():
             for sec in final_dic:
                 writer = csv.writer(file)
                 tcp_variant, queue_algo = get_meta_trace(TRACE_FILE, 'exp3')
-                writer.writerow([tcp_variant, queue_algo, sec, final_dic[sec], latency])
+                writer.writerow(['TP', tcp_variant, queue_algo, sec, final_dic[sec]])
             for sec in latency_res:
                 writer = csv.writer(file)
+                tcp_variant, queue_algo = get_meta_trace(TRACE_FILE, 'exp3')
                 try:
                     res = (float(latency_res[sec][0]) / float(latency_res[sec][1]))
                 except:
                     res = -1
-                writer.writerow([sec, res])
+                writer.writerow(['LAT', tcp_variant, queue_algo, sec, res])
 
     else:
         print("wrong option for parser")
