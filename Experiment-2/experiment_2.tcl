@@ -67,11 +67,11 @@ set N6 [$ns node]
 
 
 # Create network links. Default queueing mechanism (Droptail)
-$ns duplex-link $N1 $N2 10Mb 10ms SFQ 
-$ns duplex-link $N5 $N2 10Mb 10ms SFQ 
-$ns duplex-link $N2 $N3 10Mb 10ms SFQ 
-$ns duplex-link $N3 $N4 10Mb 10ms SFQ 
-$ns duplex-link $N3 $N6 10Mb 10ms SFQ 
+$ns duplex-link $N1 $N2 10Mb 10ms DropTail 
+$ns duplex-link $N5 $N2 10Mb 10ms DropTail 
+$ns duplex-link $N2 $N3 10Mb 10ms DropTail 
+$ns duplex-link $N3 $N4 10Mb 10ms DropTail 
+$ns duplex-link $N3 $N6 10Mb 10ms DropTail 
 
 # Set queue limit between nodes N2 and N3
 $ns queue-limit $N2 $N3 20 
@@ -99,11 +99,6 @@ $ns attach-agent $N3 $cbr_sink
 set tcp_var1 [new Agent/$tcp_variant1]
 $ns attach-agent $N1 $tcp_var1
 
-# Setup FTP application at N4 for data stream
-set ftp_stream_var1 [new Application/FTP]
-$ftp_stream_var1 set type_ FTP
-$ftp_stream_var1 attach-agent $tcp_var1
-
 # Setup TCP Sink at N4
 set tcp_sink_var1 [new Agent/TCPSink]
 $ns attach-agent $N4 $tcp_sink_var1
@@ -113,11 +108,6 @@ $ns attach-agent $N4 $tcp_sink_var1
 # Setup the second TCP connection from N5 to N6
 set tcp_var2 [new Agent/$tcp_variant2]
 $ns attach-agent $N5 $tcp_var2
-
-# Setup FTP application at N5 for data stream
-set ftp_stream_var2 [new Application/FTP]
-$ftp_stream_var2 set type_ FTP
-$ftp_stream_var2 attach-agent $tcp_var2
 
 # Setup TCP Sink at N6
 set tcp_sink_var2 [new Agent/TCPSink]
@@ -134,6 +124,17 @@ $tcp_var1 set fid_ 2
 # TCP 2 - From N5 to N6
 $ns connect $tcp_var2 $tcp_sink_var2
 $tcp_var2 set fid_ 3
+
+
+# Setup FTP application at N4 for data stream
+set ftp_stream_var1 [new Application/FTP]
+$ftp_stream_var1 set type_ FTP
+$ftp_stream_var1 attach-agent $tcp_var1
+
+# Setup FTP application at N5 for data stream
+set ftp_stream_var2 [new Application/FTP]
+$ftp_stream_var2 set type_ FTP
+$ftp_stream_var2 attach-agent $tcp_var2
 
 
 # Event schedule for TCP and UDP connections
