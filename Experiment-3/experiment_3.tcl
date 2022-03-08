@@ -43,15 +43,14 @@ set N4 [$ns node]
 set N5 [$ns node]
 set N6 [$ns node]
 
-# Create network links with specified queueing disxipline
-$ns duplex-link $N1 $N2 10Mb 12ms $queue
-$ns duplex-link $N5 $N2 10Mb 12ms $queue
-$ns duplex-link $N2 $N3 10Mb 12ms $queue
-$ns duplex-link $N4 $N3 10Mb 12ms $queue
-$ns duplex-link $N6 $N3 10Mb 12ms $queue
+# Create network links with specified queueing discipline
+$ns duplex-link $N1 $N2 10Mb 10ms $queue
+$ns duplex-link $N5 $N2 10Mb 10ms $queue
+$ns duplex-link $N2 $N3 10Mb 10ms $queue
+$ns duplex-link $N4 $N3 10Mb 10ms $queue
+$ns duplex-link $N6 $N3 10Mb 10ms $queue
 
 # Set queue limit
-# TODO - do we need limits for all or just cbr?
 $ns queue-limit $N1 $N2 50
 $ns queue-limit $N5 $N2 50
 $ns queue-limit $N2 $N3 50
@@ -64,7 +63,7 @@ set udp [new Agent/UDP]
 $ns attach-agent $N2 $udp
 # Setup CBR over UDP at N2
 set cbr_stream [new Application/Traffic/CBR]
-$cbr_stream set rate_ 10
+$cbr_stream set rate_ 8mb
 $cbr_stream set type_ CBR
 $cbr_stream set random_ false
 $cbr_stream attach-agent $udp
@@ -95,9 +94,9 @@ $tcp set fid_ 2
 # Event schedule for TCP and UDP connections
 $ns at 0.0 "$ftp_stream start"
 $ns at 3.0 "$cbr_stream start"
-$ns at 10.0 "$ftp_stream stop"
-$ns at 10.0 "$cbr_stream stop"
+$ns at 30.0 "$ftp_stream stop"
+$ns at 30.0 "$cbr_stream stop"
 
 # Run simulation
-$ns at 10.1 "finish"
+$ns at 30.1 "finish"
 $ns run
