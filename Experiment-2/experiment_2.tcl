@@ -67,11 +67,11 @@ set N6 [$ns node]
 
 
 # Create network links. Default queueing mechanism (Droptail)
-$ns duplex-link $N1 $N2 10Mb 12ms DropTail 
-$ns duplex-link $N5 $N2 10Mb 12ms DropTail 
-$ns duplex-link $N2 $N3 10Mb 12ms DropTail 
-$ns duplex-link $N4 $N3 10Mb 12ms DropTail 
-$ns duplex-link $N6 $N3 10Mb 12ms DropTail 
+$ns duplex-link $N1 $N2 10Mb 10ms DropTail 
+$ns duplex-link $N5 $N2 10Mb 10ms DropTail 
+$ns duplex-link $N2 $N3 10Mb 10ms DropTail 
+$ns duplex-link $N3 $N4 10Mb 10ms DropTail 
+$ns duplex-link $N3 $N6 10Mb 10ms DropTail 
 
 # Set queue limit between nodes N2 and N3
 $ns queue-limit $N2 $N3 20 
