@@ -63,18 +63,18 @@ set N4 [$ns node]
 set N6 [$ns node]
 
 # Create network links. Default queueing mechanism (Droptail)
-$ns duplex-link $N1 $N2 10Mb 10ms DropTail 
-$ns duplex-link $N5 $N2 10Mb 10ms DropTail 
-$ns duplex-link $N2 $N3 10Mb 10ms DropTail 
-$ns duplex-link $N3 $N4 10Mb 10ms DropTail 
-$ns duplex-link $N3 $N6 10Mb 10ms DropTail 
+$ns duplex-link $N1 $N2 10Mb 12ms DropTail
+$ns duplex-link $N5 $N2 10Mb 12ms DropTail
+$ns duplex-link $N2 $N3 10Mb 12ms DropTail
+$ns duplex-link $N3 $N4 10Mb 12ms DropTail
+$ns duplex-link $N3 $N6 10Mb 12ms DropTail
 
 # Set queue limit between nodes N2 and N3
-$ns queue-limit $N1 $N2 50 
-$ns queue-limit $N5 $N2 50 
-$ns queue-limit $N2 $N3 50 
-$ns queue-limit $N3 $N4 50 
-$ns queue-limit $N3 $N6 50 
+$ns queue-limit $N1 $N2 50
+$ns queue-limit $N5 $N2 50
+$ns queue-limit $N2 $N3 50
+$ns queue-limit $N3 $N4 50
+$ns queue-limit $N3 $N6 50
 
 # UDP-CBR Connection
 # Setup a UDP connection for CBR flow at N2
@@ -141,10 +141,10 @@ $ns at 0.1 "$cbr_stream start"
 $ns at $tcp1_start_time "$ftp_stream_var1 start"
 $ns at $tcp2_start_time "$ftp_stream_var2 start"
 
-$ns at 20.5 "$cbr_stream stop"
-$ns at 20.0 "$ftp_stream_var1 stop"
-$ns at 20.0 "$ftp_stream_var2 stop"
+$ns at 15.5 "$cbr_stream stop"
+$ns at 15.0 "$ftp_stream_var1 stop"
+$ns at 15.0 "$ftp_stream_var2 stop"
 
 # Run simulation
-$ns at 21.0 "finish"
+$ns at 16.0 "finish"
 $ns run

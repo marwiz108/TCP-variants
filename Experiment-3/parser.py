@@ -77,7 +77,7 @@ def thoughput(trace, srcNode, sinkNode, fid):
     try:
         thoughput_res = size_pkt_recv / time_usage
     except:
-        thoughput_res = 'NO PACKET'
+        thoughput_res = 0.0
     
     # return the final result
     return thoughput_res
@@ -105,7 +105,7 @@ def pktDrop(trace,srcNode,fid):
     try:
         drop_rate = float(pkt_drop) / float(pkt_sent)
     except:
-        drop_rate = 00000
+        drop_rate = 0.0
     
     #print(pkt_drop, pkt_sent)
     
@@ -151,7 +151,7 @@ def EtoELatency(trace,srcNode,fid):
     if (num_rtt != 0):
         latency = sum_latency / num_rtt
     else:
-        latency = 0
+        latency = 0.0
 
     return latency
 
