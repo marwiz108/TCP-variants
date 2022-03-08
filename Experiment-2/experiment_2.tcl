@@ -141,12 +141,12 @@ $tcp_var2 set fid_ 3
 $ns at $tcp1_start_time "$ftp_stream_var1 start"
 $ns at $tcp2_start_time "$ftp_stream_var2 start"
 
-$ns at 12.0 "$cbr_stream stop"
-$ns at 12.0 "$ftp_stream_var1 stop"
-$ns at 12.0 "$ftp_stream_var2 stop"
+$ns at 20.0 "$cbr_stream stop"
+$ns at 20.0 "$ftp_stream_var1 stop"
+$ns at 20.0 "$ftp_stream_var2 stop"
 
 # Run simulation
-$ns at 12.1 "finish"
+$ns at 20.1 "finish"
 $ns run
 
 
