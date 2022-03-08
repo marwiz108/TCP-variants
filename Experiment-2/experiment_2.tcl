@@ -87,6 +87,7 @@ set cbr_stream [new Application/Traffic/CBR]
 $cbr_stream set rate_ $cbr_flow
 $cbr_stream set type_ CBR
 $cbr_stream set random_ false
+$cbr_stream packet_size_ 1000
 $cbr_stream attach-agent $udp
 
 # Setup Sink at N3
@@ -139,17 +140,17 @@ $ftp_stream_var2 attach-agent $tcp_var2
 
 # Event schedule for TCP and UDP connections
 # Starting CBR at 0.0s
-# $ns at 0.0 "$cbr_stream start"
+$ns at 0.0 "$cbr_stream start"
 # Starting TCP variant pairs after CBR starts (stabalization check)
 $ns at $tcp1_start_time "$ftp_stream_var1 start"
 $ns at $tcp2_start_time "$ftp_stream_var2 start"
 
-$ns at 20.0 "$cbr_stream stop"
+$ns at 20.5 "$cbr_stream stop"
 $ns at 20.0 "$ftp_stream_var1 stop"
 $ns at 20.0 "$ftp_stream_var2 stop"
 
 # Run simulation
-$ns at 20.1 "finish"
+$ns at 21.0 "finish"
 $ns run
 
 

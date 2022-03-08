@@ -22,7 +22,7 @@ def parameter_calculation(trace_records):
         event, time, from_node, to_node, packet_type, packet_size, flags, flow_id, src_addr, dest_addr, seq_num, packet_id = record.split()
 
         # Calculate number of packets received for Throughput parameter calculation
-        if (event == 'r' and packet_type == 'ack'):
+        if (event == 'r'):  #  and packet_type == 'ack'
             if (to_node == '0' and flow_id == '2'):
                 # Received packet is the first one
                 if (packet_count_1 == 0):
@@ -55,7 +55,7 @@ def parameter_calculation(trace_records):
 
         # Calculate number of packets sent for Drop Rate and Latency parameter calculation
         # Save sending time of each seq_num in a dictionary to measure RTT of ack packet
-        if (event == '-' and packet_type == 'tcp'):
+        if (event == '+'):  #  and packet_type == 'tcp'
             # From Node 1 (fid_ 2)
             if (from_node == '0' and flow_id == '2'):
                 sent_packets_1 += 1
