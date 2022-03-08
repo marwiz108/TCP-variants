@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 #import os
-from curses import meta
 import sys
 import csv
 # constant
