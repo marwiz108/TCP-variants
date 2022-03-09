@@ -11,13 +11,13 @@ set tcp2_start_time [lindex $argv 2]
 # Setup the output file name
 set trace_file_name exp2_
 # TCP/... TCP/...
-append trace_file_name "Newreno" _ "Vegas"
+append trace_file_name "NewReno" _ "Vegas"
 append trace_file_name _$cbr_flow
 append trace_file_name _$tcp1_start_time
 append trace_file_name _$tcp2_start_time.tr
 
 # Console log message
-puts "$trace_file_name || Running Sim for TCP 1: Newreno | TCP 2: Vegas | CBR: $cbr_flow | TCP 1 ST: $tcp1_start_time | TCP 2 ST: $tcp2_start_time"
+puts "$trace_file_name || Running Sim for TCP 1: NewReno | TCP 2: Vegas | CBR: $cbr_flow | TCP 1 ST: $tcp1_start_time | TCP 2 ST: $tcp2_start_time"
 
 # Open simulation trace file
 set nf [open trace_data/$trace_file_name w]
@@ -59,8 +59,12 @@ $ns duplex-link $N3 $N4 10Mb 12ms DropTail
 $ns duplex-link $N2 $N5 10Mb 12ms DropTail
 $ns duplex-link $N3 $N6 10Mb 12ms DropTail
 
-# Set queue limit between nodes N2 and N3
+# Set queue limit between the nodes
+$ns queue-limit $N1 $N2 50
 $ns queue-limit $N2 $N3 50
+$ns queue-limit $N3 $N4 50
+$ns queue-limit $N2 $N5 50
+$ns queue-limit $N3 $N6 50
 
 # UDP-CBR Connection
 # Setup a UDP connection for CBR flow at N2
