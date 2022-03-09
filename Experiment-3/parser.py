@@ -134,17 +134,14 @@ def EtoELatency(trace,srcNode,fid):
     
     sum_latency = 0
     num_rtt = 0
-    invalid_rtt = 0 # there might be invalid rtt if the packet is dropped ?
 
     # loop through the dic to get total time usage also count the number of invalid rtts
     for rtt in rtts:
         if rtts[rtt][1] != 0:
             delay = float(rtts[rtt][1]) - float(rtts[rtt][0])
             sum_latency = sum_latency + delay
-        else:
-            invalid_rtt += 1
 
-    num_rtt = len(rtts) - invalid_rtt
+    num_rtt = len(rtts)
 
     # No rtt: No packet sent
     try:
