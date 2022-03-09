@@ -143,7 +143,7 @@ def EtoELatency(trace,srcNode,fid):
         else:
             invalid_rtt += 1
 
-    num_rtt = len(rtts) - invalid_rtt
+    num_rtt = len(rtts)
 
     # No rtt: No packet sent
     if (num_rtt != 0):

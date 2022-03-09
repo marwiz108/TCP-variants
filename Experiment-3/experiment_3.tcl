@@ -44,11 +44,11 @@ set N5 [$ns node]
 set N6 [$ns node]
 
 # Create network links with specified queueing discipline
-$ns duplex-link $N1 $N2 10Mb 10ms $queue
-$ns duplex-link $N5 $N2 10Mb 10ms $queue
-$ns duplex-link $N2 $N3 10Mb 10ms $queue
-$ns duplex-link $N4 $N3 10Mb 10ms $queue
-$ns duplex-link $N6 $N3 10Mb 10ms $queue
+$ns duplex-link $N1 $N2 10Mb 12ms $queue
+$ns duplex-link $N5 $N2 10Mb 12ms $queue
+$ns duplex-link $N2 $N3 10Mb 12ms $queue
+$ns duplex-link $N4 $N3 10Mb 12ms $queue
+$ns duplex-link $N6 $N3 10Mb 12ms $queue
 
 # Set queue limit
 $ns queue-limit $N1 $N2 50

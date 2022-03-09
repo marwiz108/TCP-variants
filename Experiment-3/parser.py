@@ -2,7 +2,6 @@
 
 #import os
 from __future__ import division
-from curses import meta
 import sys
 import csv
 # constant
@@ -135,22 +134,19 @@ def EtoELatency(trace,srcNode,fid):
     
     sum_latency = 0
     num_rtt = 0
-    invalid_rtt = 0 # there might be invalid rtt if the packet is dropped ?
 
     # loop through the dic to get total time usage also count the number of invalid rtts
     for rtt in rtts:
         if rtts[rtt][1] != 0:
             delay = float(rtts[rtt][1]) - float(rtts[rtt][0])
             sum_latency = sum_latency + delay
-        else:
-            invalid_rtt += 1
 
-    num_rtt = len(rtts) - invalid_rtt
+    num_rtt = len(rtts)
 
     # No rtt: No packet sent
-    if (num_rtt != 0):
+    try:
         latency = sum_latency / num_rtt
-    else:
+    except:
         latency = 0.0
 
     return latency
@@ -165,6 +161,7 @@ def get_meta_trace(TRACE_FILE, option):
         cbr_flow = cbr_flow[: -5]
 
         return tcp_variant, cbr_flow
+    
     elif option == 'exp2':
         # exp2 Vegas Vegas 9Mb 4.0 1.0.tr
         meta_data = TRACE_FILE.split('/')[-1].split('_')
@@ -174,6 +171,7 @@ def get_meta_trace(TRACE_FILE, option):
         tcp2_st = meta_data[5][: -3]
 
         return tcp_variant1, tcp_variant2, cbr_flow, tcp1_st, tcp2_st
+    
     elif option == 'exp3':
         meta_data = TRACE_FILE.split('/')[-1].split('_')
         tcp_variant = meta_data[1]
@@ -226,7 +224,7 @@ def main():
         with open(RES_FILE, 'a+', newline='') as file:
             writer = csv.writer(file)
             tcp_variant1, tcp_variant2, cbr_flow, tcp1_st, tcp2_st = get_meta_trace(TRACE_FILE, 'exp2')
-            writer.writerow([tcp_variant1, tcp1_st, thoughput_res1, drop_rate1, latency1, tcp_variant2, tcp2_st, thoughput_res2, drop_rate2, latency2, cbr_flow])
+            writer.writerow([tcp_variant1, thoughput_res1, drop_rate1, latency1, tcp_variant2, thoughput_res2, drop_rate2, latency2, cbr_flow])
 
     elif OPTION == "exp3":
         # for exp3 we only care about latency and throughput verse time
