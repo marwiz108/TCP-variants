@@ -5,7 +5,7 @@ There was overlapping collaboration in all aspects of the project, but the work 
 
 Haojun did most of the work to parse the trace files and produce results, and in writing results to csv files. Pratik and Marwa also collaborated on the parsing to make edits as we made changes to each experiment and to make sure our results made sense.
 
-Pratik carried out the writing of the simulation files for experiment 1 and 2, as well as writing their shell scripts to run the simulations.
+Pratik carried out the writing of the simulation files for experiment 1 and 2, as well as writing their shell scripts to run the simulations, and plotting the results for experiment 2.
 
 Marwa carried out the writing of the simulation file for experiment 3 and the shell script to run the simulation, and plotted the results for experiments 1 and 3 into graphs for the final report.
 
